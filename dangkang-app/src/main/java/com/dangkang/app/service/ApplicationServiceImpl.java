@@ -68,7 +68,6 @@ public class ApplicationServiceImpl implements ApplicationService {
             // 4 构建成功返回
             response.buildSuccess(TRADE_CODE, TRADE_DESCRIPTION);
             response.setData(applicationServiceResultDataDTO);
-            return response;
         } catch (ApplicationException e) {
             if(e.getCause()!=null){//应用异常是自定义或转换为ApplicationException，系统异常会内嵌在ApplicationException中
                 logger.error(e.getDetailMessage(),e); //系统环境出错
@@ -78,14 +77,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 
             // 4.1 构建错误返回
             response.buildFailure(TRADE_CODE, TRADE_DESCRIPTION,e.getErrorCode(),e.getPromptMessage());
-            return response;
         }catch (Throwable t){
             logger.error("未处理的异常",t);
             //4.2 构建未处理异常返回
             response.buildUnknownFailure(TRADE_CODE,TRADE_DESCRIPTION,t.getMessage());
-            return response;
         }
-    }
+        return response;
+   }
 
     private void validateParameter(ApplicationServiceRequestDTO applicationServiceRequestDTO){
         Result result = FluentValidator.checkAll().failOver()
